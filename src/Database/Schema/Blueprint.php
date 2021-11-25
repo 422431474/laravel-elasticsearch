@@ -170,9 +170,9 @@ class Blueprint extends \Illuminate\Database\Schema\Blueprint
      *
      * @return PropertyDefinition
      */
-    public function float($name, $total = 8, $places = 2): PropertyDefinition
+    public function float($column, $total = 8, $places = 2, $unsigned = false): PropertyDefinition
     {
-        return $this->addColumn('float', $name);
+        return $this->addColumn('float', $column);
     }
 
     /**
@@ -230,9 +230,8 @@ class Blueprint extends \Illuminate\Database\Schema\Blueprint
     public function getIndex(): string
     {
         $suffix = Config::get('database.connections.elasticsearch.suffix');
-        $timestamp = Carbon::now()->format('Y_m_d_His');
 
-        return "{$timestamp}_{$this->getTable()}" . $suffix;
+        return "{$this->getTable()}" . $suffix;
     }
 
     /**

@@ -59,6 +59,10 @@ class QueryBuilder extends BaseBuilder
      * @var array
      */
     public $operators = ['=', '<', '>', '<=', '>=', '!=', 'exists', 'like'];
+    /**
+     * @var false|mixed
+     */
+    public $distinct;
 
     /**
      * Set the document type the search is targeting.
@@ -298,7 +302,7 @@ class QueryBuilder extends BaseBuilder
             func_num_args() === 2
         );
 
-        if ($value instanceof DateTimeInterface) {
+        if ($value instanceof \DateTimeInterface) {
             $value = $value->format('N');
         }
 

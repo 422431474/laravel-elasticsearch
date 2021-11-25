@@ -39,16 +39,18 @@ class BulkInsertQueryException extends Exception
         $totalErrors = count($items);
 
         // reduce to max limit
-        array_splice($items, 0, $this->errorLimit);
+        array_splice($items, $this->errorLimit,$totalErrors);
 
         $message[] = 'Bulk Insert Errors (' . 'Showing ' . count($items) . ' of ' . $totalErrors . '):';
 
         foreach ($items as $item) {
+            $caused_by = $item['index']['error']['caused_by'] ?? [];
             $itemError = array_merge([
-                '_id'  => $item['_id'],
-                'reason' => $item['error']['reason'],
-            ], $item['error']['caused_by'] ?? []);
-
+                '_id'  => $item['index']['_id'],
+                'reason' => $item['index']['error']['reason'],
+                'caused_by_type' => $caused_by['type'] ?? '',
+                'caused_by_reason' => $caused_by['reason'] ?? '',
+            ]);
             $message[] = implode(': ', $itemError);
         }
 

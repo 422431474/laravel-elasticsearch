@@ -66,6 +66,13 @@ class QueryGrammar extends BaseGrammar
             unset($params['body']['query']);
         }
 
+        if($builder->distinct) {
+            if(is_array($builder->distinct)) {
+                $builder->distinct = reset($builder->distinct);
+            }
+            $params['body']['collapse'] = ['field'=>$builder->distinct];
+        }
+
         // print "<pre>";
         // print str_replace('    ', '  ', json_encode($params, JSON_PRETTY_PRINT));
         // exit;
@@ -1226,9 +1233,10 @@ class QueryGrammar extends BaseGrammar
             if(Str::startsWith($column, $builder->from . '.')) {
                 $column = Str::replaceFirst($builder->from . '.', '', $column);
             }
-            $script[] = 'ctx._source.' . $column . ' = "' . addslashes($value) . '";';
+            $clause['body']['script']['params'][$column] = $value;
+            $script[] = 'ctx._source.' . $column . ' = params.'.$column.';';
         }
-        $clause['body']['script'] = implode('', $script);
+        $clause['body']['script']['source'] = implode('', $script);
         return $clause;
     }
 

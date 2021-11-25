@@ -40,10 +40,10 @@ class ElasticsearchGrammar extends Grammar
                 $index = $blueprint->getIndex(), $body
             );
 
-            $alias = $blueprint->getAlias();
-
-            if (!$connection->indices()->existsAlias(['name' => $alias])) {
-                $connection->createAlias($index, $alias);
+            if($alias = $blueprint->getAlias()) {
+                if (!$connection->indices()->existsAlias(['name' => $alias])) {
+                    $connection->createAlias($index, $alias);
+                }
             }
         };
     }
