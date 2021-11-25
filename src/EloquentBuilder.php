@@ -3,6 +3,7 @@
 namespace DesignMyNight\Elasticsearch;
 
 use Generator;
+use Illuminate\Container\Container;
 use Illuminate\Database\Eloquent\Builder as BaseBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -136,9 +137,12 @@ class EloquentBuilder extends BaseBuilder
 
         $total = $this->toBase()->getCountForPagination($columns);
 
-        return new LengthAwarePaginator($results, $total, $perPage, $page, [
-            'path'     => Paginator::resolveCurrentPath(),
-            'pageName' => $pageName,
+        return Container::getInstance()->makeWith(LengthAwarePaginator::class, [
+            'items' => $results, 'total' => $total, 'perPage' => $perPage, 'currentPage' => $page,
+            'options' => [
+                'path'     => Paginator::resolveCurrentPath(),
+                'pageName' => $pageName,
+            ]
         ]);
     }
 }
