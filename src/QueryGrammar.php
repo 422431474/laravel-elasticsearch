@@ -5,6 +5,7 @@ namespace DesignMyNight\Elasticsearch;
 use DateTime;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Query\Grammars\Grammar as BaseGrammar;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
@@ -195,11 +196,15 @@ class QueryGrammar extends BaseGrammar
                 ],
             ];
         } else {
-            $query = [
-                'term' => [
-                    $where['column'] => $value,
-                ],
-            ];
+            if(stripos($where['column'], '.') !== false){
+                $query = [$where['column'] => $value];
+            }else{
+                $query = [
+                    'term' => [
+                        $where['column'] => $value,
+                    ],
+                ];
+            }
         }
 
         $query = $this->applyOptionsToClause($query, $where);
@@ -420,6 +425,23 @@ class QueryGrammar extends BaseGrammar
     {
         $where['operator'] = '!=';
         return $this->compileWhereBasic($builder, $where);
+    }
+
+    /**
+     * Compile a null clause
+     *
+     * @param  Builder  $builder
+     * @param  array  $where
+     * @return array
+     */
+    protected function compileWhereRaw(Builder $builder, array $where): array
+    {
+        if($where['sql'] instanceof \Closure){
+            $query = $builder->newQuery();
+            $where['sql']($query);
+            return Arr::get($this->compileWheres($query),'query.bool');
+        }
+        return $where['sql'];
     }
 
     /**
