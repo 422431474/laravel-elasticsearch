@@ -197,7 +197,11 @@ class QueryGrammar extends BaseGrammar
             ];
         } else {
             if(stripos($where['column'], '.') !== false){
-                $query = [$where['column'] => $value];
+                $query = [
+                    'match' => [
+                        $where['column'] => $value
+                    ]
+                ];
             }else{
                 $query = [
                     'term' => [
