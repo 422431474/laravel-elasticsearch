@@ -196,19 +196,11 @@ class QueryGrammar extends BaseGrammar
                 ],
             ];
         } else {
-            if(stripos($where['column'], '.') !== false){
-                $query = [
-                    'match' => [
-                        $where['column'] => $value
-                    ]
-                ];
-            }else{
-                $query = [
-                    'term' => [
-                        $where['column'] => $value,
-                    ],
-                ];
-            }
+            $query = [
+                'term' => [
+                    $where['column'] => $value,
+                ],
+            ];
         }
 
         $query = $this->applyOptionsToClause($query, $where);
