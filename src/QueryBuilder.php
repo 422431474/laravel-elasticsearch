@@ -64,6 +64,8 @@ class QueryBuilder extends BaseBuilder
      */
     public $distinct;
 
+    public $usingScrollLimit = 0;
+
     /**
      * Set the document type the search is targeting.
      *
@@ -693,6 +695,14 @@ class QueryBuilder extends BaseBuilder
     }
 
     /**
+     * Execute the scroll as a "select" statement.
+     * @param int $size
+     */
+    public function usingScroll($size = 10000){
+        $this->usingScrollLimit = $size;
+    }
+
+    /**
      * Execute the query as a "select" statement.
      *
      * @param array $columns
@@ -706,7 +716,11 @@ class QueryBuilder extends BaseBuilder
             $this->columns = $columns;
         }
 
-        $results = $this->getResultsOnce();
+        if(!$this->usingScrollLimit) {
+            $results = collect($this->getResultsOnce());
+        } else{
+            $results = collect($this->cursor());
+        }
 
         $this->columns = $original;
 
@@ -804,7 +818,7 @@ class QueryBuilder extends BaseBuilder
             $this->columns = ['*'];
         }
 
-        foreach ($this->connection->cursor($this->toCompiledQuery()) as $document) {
+        foreach ($this->connection->cursor($this->toCompiledQuery(),['size' => $this->usingScrollLimit]) as $document) {
             yield $this->processor->documentFromResult($this, $document);
         }
     }

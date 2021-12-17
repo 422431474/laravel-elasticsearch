@@ -136,7 +136,7 @@ class Connection extends BaseConnection
     /**
      * Run a select statement against the database and return a generator.
      *
-     * @param string $query
+     * @param array $query
      * @param array  $bindings
      * @param bool   $useReadPdo
      *
@@ -149,7 +149,7 @@ class Connection extends BaseConnection
 
         $scrollParams = [
             'scroll' => $scrollTimeout,
-            'size' => 100, // Number of results per shard
+            'size' => $bindings['size'] ?? 10000, // Number of results per shard
             'index' => $query['index'],
             'body' => $query['body'],
         ];

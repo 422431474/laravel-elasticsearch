@@ -67,7 +67,7 @@ class QueryGrammar extends BaseGrammar
             unset($params['body']['query']);
         }
 
-        if($builder->distinct) {
+        if($builder->distinct && !$builder->usingScrollLimit) {
             if(is_array($builder->distinct)) {
                 $builder->distinct = reset($builder->distinct);
             }
