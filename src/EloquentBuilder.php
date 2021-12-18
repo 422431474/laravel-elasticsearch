@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Builder as BaseBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 
 /**
@@ -133,9 +134,16 @@ class EloquentBuilder extends BaseBuilder
 
         $perPage = $perPage ?: $this->model->getPerPage();
 
-        $results = $this->forPage($page, $perPage)->get($columns);
-
-        $total = $this->toBase()->getCountForPagination($columns);
+        if($this->query->distinct){
+            $distinct = is_string($this->query->distinct) ? $this->query->distinct : collect($this->query->distinct)->first();
+            $total = Arr::get((clone $this)->usingScroll(0)
+                ->aggregation('query_distinct_total', 'cardinality', ['field' => $distinct,'precision_threshold'=>40000])
+                ->getQuery()->getAggregationResults(),'query_distinct_total.value');
+            $results = $this->forPage($page, $perPage)->usingScroll(0)->get($columns);
+        } else{
+            $results = $this->forPage($page, $perPage)->usingScroll(0)->get($columns);
+            $total = $this->toBase()->getCountForPagination($columns);
+        }
 
         return Container::getInstance()->makeWith(LengthAwarePaginator::class, [
             'items' => $results, 'total' => $total, 'perPage' => $perPage, 'currentPage' => $page,

@@ -74,10 +74,6 @@ class QueryGrammar extends BaseGrammar
             $params['body']['collapse'] = ['field'=>$builder->distinct];
         }
 
-        // print "<pre>";
-        // print str_replace('    ', '  ', json_encode($params, JSON_PRETTY_PRINT));
-        // exit;
-
         return $params;
     }
 
