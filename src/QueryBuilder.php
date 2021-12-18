@@ -695,6 +695,47 @@ class QueryBuilder extends BaseBuilder
     }
 
     /**
+     * Get an array with the values of a given column.
+     *
+     * @param  string  $column
+     * @param  string|null  $key
+     * @return \Illuminate\Support\Collection
+     */
+    public function pluck($column, $key = null)
+    {
+        // First, we will need to select the results of the query accounting for the
+        // given columns / key. Once we have the results, we will be able to take
+        // the results and get the exact data that was requested for the query.
+        $queryResult = $this->onceWithColumns(
+            is_null($key) ? [$column] : [$column, $key],
+            function () {
+                if(!$this->usingScrollLimit) {
+                    return $this->processor->processSelect(
+                        $this, $this->runSelect()
+                    );
+                }else{
+                    return collect($this->cursor())->toArray();
+                }
+            }
+        );
+
+        if (empty($queryResult)) {
+            return collect();
+        }
+
+        // If the columns are qualified with a table or have an alias, we cannot use
+        // those directly in the "pluck" operations since the results from the DB
+        // are only keyed by the column itself. We'll strip the table out here.
+        $column = $this->stripTableForPluck($column);
+
+        $key = $this->stripTableForPluck($key);
+
+        return is_array($queryResult[0])
+            ? $this->pluckFromArrayColumn($queryResult, $column, $key)
+            : $this->pluckFromObjectColumn($queryResult, $column, $key);
+    }
+
+    /**
      * Execute the scroll as a "select" statement.
      * @param int $size
      */
