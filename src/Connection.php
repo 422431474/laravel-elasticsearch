@@ -171,6 +171,10 @@ class Connection extends BaseConnection
                 yield $result;
             }
         }
+        // clear scroll id
+        if($scrollId){
+            $this->connection->clearScroll(['scroll_id'=>$scrollId]);
+        }
     }
 
     /**
