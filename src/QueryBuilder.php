@@ -736,11 +736,29 @@ class QueryBuilder extends BaseBuilder
     }
 
     /**
+     * Set the "limit" value of the query.
+     *
+     * @param  int  $value
+     * @return $this
+     */
+    public function limit($value)
+    {
+        $property = $this->unions ? 'unionLimit' : 'limit';
+
+        if ($value >= 0) {
+            $this->$property = $value;
+        }
+
+        return $this->usingScroll(0);
+    }
+
+    /**
      * Execute the scroll as a "select" statement.
      * @param int $size
      */
-    public function usingScroll($size = 10000){
+    public function usingScroll(int $size = 10000){
         $this->usingScrollLimit = $size;
+        return $this;
     }
 
     /**

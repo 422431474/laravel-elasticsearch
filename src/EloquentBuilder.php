@@ -136,12 +136,12 @@ class EloquentBuilder extends BaseBuilder
 
         if($this->query->distinct){
             $distinct = is_string($this->query->distinct) ? $this->query->distinct : collect($this->query->distinct)->first();
-            $total = Arr::get((clone $this)->usingScroll(0)
+            $total = Arr::get((clone $this)
                 ->aggregation('query_distinct_total', 'cardinality', ['field' => $distinct,'precision_threshold'=>40000])
                 ->getQuery()->getAggregationResults(),'query_distinct_total.value');
-            $results = $this->forPage($page, $perPage)->usingScroll(0)->get($columns);
+            $results = $this->forPage($page, $perPage)->get($columns);
         } else{
-            $results = $this->forPage($page, $perPage)->usingScroll(0)->get($columns);
+            $results = $this->forPage($page, $perPage)->get($columns);
             $total = $this->toBase()->getCountForPagination($columns);
         }
 
