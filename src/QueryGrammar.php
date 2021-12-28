@@ -1232,7 +1232,10 @@ class QueryGrammar extends BaseGrammar
 
             $params['body'][] = $doc;
         }
-
+        //refresh
+        if ($refresh = $builder->getOption('delete_refresh')) {
+            $params['refresh'] = $refresh;
+        }
         return $params;
     }
 
@@ -1251,6 +1254,10 @@ class QueryGrammar extends BaseGrammar
             $script[] = 'ctx._source.' . $column . ' = params.'.$column.';';
         }
         $clause['body']['script']['source'] = implode('', $script);
+        //refresh
+        if ($refresh = $builder->getOption('delete_refresh')) {
+            $clause['refresh'] = $refresh;
+        }
         return $clause;
     }
 
