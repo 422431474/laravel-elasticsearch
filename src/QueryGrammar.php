@@ -74,6 +74,10 @@ class QueryGrammar extends BaseGrammar
             $params['body']['collapse'] = ['field'=>$builder->distinct];
         }
 
+        if(!$builder->usingScrollLimit){
+            $params['track_total_hits'] = true;
+        }
+
         return $params;
     }
 

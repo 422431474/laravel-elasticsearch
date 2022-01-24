@@ -640,6 +640,21 @@ class QueryBuilder extends BaseBuilder
     }
 
     /**
+     * Set whether to refresh during delete by query
+     *
+     * @link https://www.elastic.co/guide/en/elasticsearch/reference/7.x/docs-delete-by-query.html#docs-delete-by-query-api-query-params
+     * @link https://www.elastic.co/guide/en/elasticsearch/reference/7.x/docs-delete-by-query.html#_refreshing_shards
+     *
+     * @return self
+     * @throws \Exception
+     */
+    public function withRef(): self
+    {
+        $this->options['delete_refresh'] = true;
+        return $this;
+    }
+
+    /**
      * Set how to handle conflucts during a delete request
      *
      * @link https://www.elastic.co/guide/en/elasticsearch/reference/7.x/docs-delete-by-query.html#docs-delete-by-query-api-query-params
