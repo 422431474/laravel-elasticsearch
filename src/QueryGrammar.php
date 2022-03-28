@@ -1253,6 +1253,7 @@ class QueryGrammar extends BaseGrammar
     public function compileUpdate(Builder $builder, $values)
     {
         $clause = $this->compileSelect($builder);
+        unset($clause['_type']);
         $clause['body']['conflicts'] = 'proceed';
         $script = [];
 
