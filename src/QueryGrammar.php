@@ -30,6 +30,9 @@ class QueryGrammar extends BaseGrammar
     {
         $query = $this->compileWheres($builder);
 
+        $params = [
+            'index' => $builder->from . $this->indexSuffix,
+        ];
         //document type
         if($builder->type){
             $params['_type'] = $builder->type;
