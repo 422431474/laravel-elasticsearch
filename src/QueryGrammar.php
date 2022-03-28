@@ -1282,7 +1282,7 @@ class QueryGrammar extends BaseGrammar
     public function compileDelete(Builder $builder): array
     {
         $clause = $this->compileSelect($builder);
-
+        unset($clause['_type']);
         if ($conflict = $builder->getOption('delete_conflicts')) {
             $clause['conflicts'] = $conflict;
         }
