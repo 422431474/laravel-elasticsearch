@@ -41,7 +41,7 @@ trait Searchable
      */
     public function getSearchType()
     {
-        return $this->searchType ?? Str::singular($this->getTable());
+        return $this->searchType ?? ($this->type ?? Str::singular($this->getTable()));
     }
 
     /**
