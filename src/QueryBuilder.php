@@ -139,7 +139,7 @@ class QueryBuilder extends BaseBuilder
      * @param bool   $not
      * @return self
      */
-    public function whereBetween($column, array $values, $boolean = 'and', $not = false): self
+    public function whereBetween($column, iterable $values, $boolean = 'and', $not = false): self
     {
         $type = 'Between';
 
@@ -241,7 +241,7 @@ class QueryBuilder extends BaseBuilder
      * @param string                                    $boolean
      * @return self
      */
-    public function whereNot($query, $boolean = 'and'): self
+    public function whereNot($column, $operator = null, $value = null, $boolean = 'and'): self
     {
         $type = 'Not';
 
