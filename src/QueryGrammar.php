@@ -30,12 +30,13 @@ class QueryGrammar extends BaseGrammar
     {
         $query = $this->compileWheres($builder);
 
-        $params = [
-            'index' => $builder->from . $this->indexSuffix,
-            'body'  => [
+        //document type
+        if($builder->type){
+            $params['_type'] = $builder->type;
+        }
+        $params['body']  = [
                 '_source' => $builder->columns && !in_array('*', $builder->columns) ? $builder->columns : true,
                 'query'   => $query['query']
-            ],
         ];
 
         if ($query['filter']) {
@@ -1195,11 +1196,11 @@ class QueryGrammar extends BaseGrammar
             if (isset($doc['child_documents'])) {
                 foreach ($doc['child_documents'] as $childDoc) {
                     $params['body'][] = [
-                        'index' => [
+                        'index' => array_filter(array_merge([
                             '_index' => $builder->from . $this->indexSuffix,
                             '_id'    => $childDoc['id'],
                             'parent' => $doc['id'],
-                        ]
+                        ],$builder->type ? ['_type'=>$builder->type]:[])),
                     ];
 
                     $params['body'][] = $childDoc['document'];
@@ -1212,6 +1213,9 @@ class QueryGrammar extends BaseGrammar
                 '_index' => $builder->from . $this->indexSuffix,
                 '_id'    => $doc['id'],
             ];
+            if($builder->type){
+                $index['_type'] = $builder->type;
+            }
 
             if(isset($doc['_routing'])) {
                 $index['routing'] = $doc['_routing'];
