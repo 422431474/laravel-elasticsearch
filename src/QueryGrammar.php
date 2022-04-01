@@ -34,7 +34,7 @@ class QueryGrammar extends BaseGrammar
             'index' => $builder->from . $this->indexSuffix,
         ];
         //document type
-        if($builder->type){
+        if($builder->type && empty($builder->limit)){
             $params['_type'] = $builder->type;
         }
         $params['body']  = [
