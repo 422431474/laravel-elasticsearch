@@ -1244,7 +1244,9 @@ class QueryGrammar extends BaseGrammar
             $params['body'][] = $doc;
         }
         //refresh
-        if ($refresh = $builder->getOption('delete_refresh')) {
+        if ($refresh = $builder->getOption('
+        
+        _refresh')) {
             $params['refresh'] = $refresh;
         }
         return $params;
@@ -1283,6 +1285,9 @@ class QueryGrammar extends BaseGrammar
     {
         $clause = $this->compileSelect($builder);
         unset($clause['_type']);
+        if(empty(Arr::except($clause['body'] ?? [],['_source']))){
+            $clause['body']['query']['match_all'] = new \stdClass();
+        }
         if ($conflict = $builder->getOption('delete_conflicts')) {
             $clause['conflicts'] = $conflict;
         }
