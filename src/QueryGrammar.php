@@ -1272,6 +1272,7 @@ class QueryGrammar extends BaseGrammar
         if ($refresh = $builder->getOption('delete_refresh')) {
             $clause['refresh'] = $refresh;
         }
+        unset($clause['track_total_hits']);
         return $clause;
     }
 
