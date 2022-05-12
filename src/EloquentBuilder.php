@@ -67,6 +67,14 @@ class EloquentBuilder extends BaseBuilder
     {
         return $this->toBase()->getCountForPagination($columns);
     }
+    
+     /**
+     * @return bool
+     */
+    public function exists(): bool
+    {
+        return (bool)$this->toBase()->getCountForPagination('*');
+    }
 
     /**
      * @param string $collectionClass
