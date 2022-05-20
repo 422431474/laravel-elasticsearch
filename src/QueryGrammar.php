@@ -199,6 +199,8 @@ class QueryGrammar extends BaseGrammar
                     ],
                 ],
             ];
+        } else if (in_array($where['column'] ?? '',['match','wildcard','prefix','text'])){
+            $query = [$where['column'] => $value];
         } else {
             $query = [
                 'term' => [
