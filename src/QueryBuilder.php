@@ -648,9 +648,9 @@ class QueryBuilder extends BaseBuilder
      * @return self
      * @throws \Exception
      */
-    public function withRef(): self
+    public function withRef($option = true): self
     {
-        $this->options['delete_refresh'] = true;
+        $this->options['delete_refresh'] = $option;
         return $this;
     }
 
