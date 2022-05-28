@@ -86,7 +86,7 @@ class QueryBuilder extends BaseBuilder
      * @param \Closure $callable
      */
     public function withClosure(Closure $callable){
-        $this->withCallable = $callable;
+        $this->withClosure = $callable;
     }
 
     /**
