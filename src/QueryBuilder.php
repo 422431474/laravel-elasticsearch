@@ -39,6 +39,8 @@ class QueryBuilder extends BaseBuilder
 
     public $includeInnerHits;
 
+    public $withClosure;
+
     protected $parentId;
 
     protected $results;
@@ -78,6 +80,13 @@ class QueryBuilder extends BaseBuilder
         $this->type = $type;
 
         return $this;
+    }
+    
+    /**
+     * @param \Closure $callable
+     */
+    public function withClosure(Closure $callable){
+        $this->withCallable = $callable;
     }
 
     /**
