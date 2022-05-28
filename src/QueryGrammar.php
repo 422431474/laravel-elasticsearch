@@ -81,7 +81,10 @@ class QueryGrammar extends BaseGrammar
         if(!$builder->usingScrollLimit){
             $params['track_total_hits'] = true;
         }
-
+        if($builder->withClosure){
+            $closure = $builder->withClosure;
+            $params = $closure($params);
+        }
         return $params;
     }
 
