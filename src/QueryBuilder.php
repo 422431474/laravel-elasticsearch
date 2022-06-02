@@ -138,6 +138,24 @@ class QueryBuilder extends BaseBuilder
     {
         return $this->options[$option] ?? null;
     }
+    
+    /**
+     * update by script
+     *
+     * @param string $script
+     * @param array  $params
+     * @return mixed
+     */
+    public function updateScript(string $script, array $params){
+        $this->applyBeforeQueryCallbacks();
+        $sql = $this->grammar->compileUpdate($this, []);
+        $sql['body']['script']['params'] = $params;
+        $sql['body']['script']['source'] = $script;
+        $updated = $this->connection->update($sql, $this->cleanBindings(
+            $this->grammar->prepareBindingsForUpdate($this->bindings, $params)
+        ));
+        return $updated['updated'] ?? false;
+    }
 
     /**
      * Add a where between statement to the query.
