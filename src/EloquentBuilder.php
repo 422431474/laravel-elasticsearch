@@ -75,6 +75,14 @@ class EloquentBuilder extends BaseBuilder
     {
         return (bool)$this->toBase()->getCountForPagination('*');
     }
+    
+    /**
+     * Script 更新
+     * @return bool
+     */
+    public function updateScript(string $script, array $params){
+        return $this->toBase()->updateScript($script,$params);
+    }
 
     /**
      * @param string $collectionClass
