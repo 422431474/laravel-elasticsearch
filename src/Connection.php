@@ -144,7 +144,7 @@ class Connection extends BaseConnection
      */
     public function cursor($query, $bindings = [], $useReadPdo = false)
     {
-        $scrollTimeout = '10s';
+        $scrollTimeout = $this->config['scroll_timeout'] ?? '30s';
         $limit = $query['size'] ?? 0;
 
         $scrollParams = [
