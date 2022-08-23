@@ -776,6 +776,56 @@ class QueryBuilder extends BaseBuilder
             ? $this->pluckFromArrayColumn($queryResult, $column, $key)
             : $this->pluckFromObjectColumn($queryResult, $column, $key);
     }
+    
+    /**
+     * Retrieve column values from rows represented as arrays.
+     *
+     * @param  array  $queryResult
+     * @param  string  $column
+     * @param  string  $key
+     * @return \Illuminate\Support\Collection
+     */
+    protected function pluckFromArrayColumn($queryResult, $column, $key)
+    {
+        $results = [];
+
+        if (is_null($key)) {
+            foreach ($queryResult as $row) {
+                $results[] = $row[$column] ?? null;
+            }
+        } else {
+            foreach ($queryResult as $row) {
+                $results[$row[$key]] = $row[$column] ?? null;
+            }
+        }
+
+        return collect($results);
+    }
+    
+    /**
+     * Retrieve column values from rows represented as objects.
+     *
+     * @param  array  $queryResult
+     * @param  string  $column
+     * @param  string  $key
+     * @return \Illuminate\Support\Collection
+     */
+    protected function pluckFromObjectColumn($queryResult, $column, $key)
+    {
+        $results = [];
+
+        if (is_null($key)) {
+            foreach ($queryResult as $row) {
+                $results[] = $row->$column ?? null;
+            }
+        } else {
+            foreach ($queryResult as $row) {
+                $results[$row->$key] = $row->$column ?? null;
+            }
+        }
+
+        return collect($results);
+    }
 
     /**
      * Set the "limit" value of the query.
