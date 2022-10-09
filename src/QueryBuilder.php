@@ -1010,8 +1010,9 @@ class QueryBuilder extends BaseBuilder
         if (!is_null($id)) {
             $this->where($this->getKeyName(), '=', $id);
         }
-
-        $result = $this->connection->delete($this->grammar->compileDelete($this));
+        $deleteParams = $this->grammar->compileDelete($this);
+        unset($deleteParams['track_total_hits']);
+        $result = $this->connection->delete($deleteParams);
 
         return !empty($result['deleted']);
     }
