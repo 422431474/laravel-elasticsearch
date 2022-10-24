@@ -151,6 +151,7 @@ class QueryBuilder extends BaseBuilder
         $sql = $this->grammar->compileUpdate($this, []);
         $sql['body']['script']['params'] = $params;
         $sql['body']['script']['source'] = $script;
+        $sql['refresh'] = true;
         $updated = $this->connection->update($sql, $this->cleanBindings(
             $this->grammar->prepareBindingsForUpdate($this->bindings, $params)
         ));
