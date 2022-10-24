@@ -1249,11 +1249,7 @@ class QueryGrammar extends BaseGrammar
             $params['body'][] = $doc;
         }
         //refresh
-        if ($refresh = $builder->getOption('
-        
-        _refresh')) {
-            $params['refresh'] = $refresh;
-        }
+        $params['refresh'] = true;
         return $params;
     }
 
@@ -1274,9 +1270,7 @@ class QueryGrammar extends BaseGrammar
         }
         $clause['body']['script']['source'] = implode('', $script);
         //refresh
-        if ($refresh = $builder->getOption('delete_refresh')) {
-            $clause['refresh'] = $refresh;
-        }
+        $clause['refresh'] = true;
         unset($clause['track_total_hits']);
         return $clause;
     }
@@ -1297,11 +1291,7 @@ class QueryGrammar extends BaseGrammar
         if ($conflict = $builder->getOption('delete_conflicts')) {
             $clause['conflicts'] = $conflict;
         }
-
-        if ($refresh = $builder->getOption('delete_refresh')) {
-            $clause['refresh'] = $refresh;
-        }
-
+        $clause['refresh'] = true;
         return $clause;
     }
 
@@ -1317,7 +1307,8 @@ class QueryGrammar extends BaseGrammar
     }
 
     /**
-     * Compile a delete query
+     * Compile a 
+     query
      *
      * @param  Builder  $builder
      * @return string
