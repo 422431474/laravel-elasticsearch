@@ -83,6 +83,14 @@ class EloquentBuilder extends BaseBuilder
     public function updateScript(string $script, array $params){
         return $this->toBase()->updateScript($script,$params);
     }
+    
+    /**
+     * 刷新索引可见
+     * @return array|mixed
+     */
+    public function refresh(){
+        return $this->model->getConnection()->indices()->refresh(['index'=>$this->model->getTable()])['_shards'] ?? [];
+    }
 
     /**
      * @param string $collectionClass
