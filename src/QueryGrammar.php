@@ -39,7 +39,7 @@ class QueryGrammar extends BaseGrammar
         }
         $params['body']  = [
                 '_source' => $builder->columns && !in_array('*', $builder->columns) ? $builder->columns : true,
-                'query'   => $query['query']
+                'query'   => ["bool" => ["filter" => $query['query']]]
         ];
 
         if ($query['filter']) {
